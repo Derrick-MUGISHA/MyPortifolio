@@ -1,182 +1,112 @@
 "use client"
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import { motion } from "framer-motion"
-import { Logo } from "@/components/logo"
-import { LoadingBar } from "@/components/loading-bar"
-import { useMobile } from "@/hooks/use-mobile"
+import Link from "next/link";
+import { MenuIcon, XIcon } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
-export function MainNav() {
-  const pathname = usePathname()
-  const [isOpen, setIsOpen] = React.useState(false)
-  const [scrolled, setScrolled] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(false)
-  const isMobile = useMobile()
-
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  // Simplified loading state management without router events
-  const handleNavigation = () => {
-    setIsLoading(true)
-    // Reset loading state after a short delay to simulate navigation
-    setTimeout(() => {
-      setIsLoading(false)
-      setIsOpen(false)
-    }, 500)
-  }
-
-  const routes = [
-    {
-      href: "/",
-      label: "Home",
-      active: pathname === "/",
-    },
-    {
-      href: "/about",
-      label: "About",
-      active: pathname === "/about",
-    },
-    {
-      href: "/skills",
-      label: "Skills",
-      active: pathname === "/skills",
-    },
-    {
-      href: "/projects",
-      label: "Projects",
-      active: pathname === "/projects",
-    },
-    {
-      href: "/blog",
-      label: "Blog",
-      active: pathname === "/blog",
-    },
-    {
-      href: "/contact",
-      label: "Contact",
-      active: pathname === "/contact",
-    },
-  ]
-
-  return (
-    <motion.div
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 flex flex-col justify-between transition-all duration-300",
-        scrolled ? "bg-teal/80 backdrop-blur-md" : "bg-transparent",
-      )}
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="flex justify-between items-center py-3 md:py-4 px-4 md:px-6 lg:px-8">
-        <div className="flex items-center">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Logo />
-          </Link>
-        </div>
-
-        <nav className="hidden md:flex items-center space-x-4 lg:space-x-8 text-sm font-medium">
-          {routes.map((route, i) => (
-            <motion.div
-              key={route.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * i, duration: 0.5 }}
-            >
-              <Link
-                href={route.href}
-                className={cn(
-                  "transition-colors hover:text-amber animated-underline text-base",
-                  route.active ? "text-amber font-bold" : "text-cream/80",
-                )}
-                onClick={handleNavigation}
-              >
-                {route.label}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
-
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden text-cream"
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="border-l border-amber/20 w-[80vw] sm:w-[350px] bg-teal/95">
-            <div className="mt-8 mb-6">
-              <Logo />
-            </div>
-            <nav className="flex flex-col gap-6 mt-8">
-              {routes.map((route, i) => (
-                <motion.div
-                  key={route.href}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 * i, duration: 0.3 }}
-                >
-                  <Link
-                    href={route.href}
-                    className={cn(
-                      "text-lg font-medium transition-colors hover:text-amber block py-2",
-                      route.active ? "text-amber font-bold" : "text-cream/80",
-                    )}
-                    onClick={handleNavigation}
-                  >
-                    {route.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </nav>
-
-            <div className="absolute bottom-8 left-6 right-6">
-              <div className="flex flex-col gap-4">
-                <p className="text-sm text-cream/70">Get in touch:</p>
-                <div className="flex gap-3">
-                  <Button
-                    asChild
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 border-amber/50 text-cream hover:bg-amber/20"
-                  >
-                    <Link href="mailto:contact@annemarie.dev">Email</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    variant="outline"
-                    className="flex-1 border-amber/50 text-cream hover:bg-amber/20"
-                  >
-                    <Link href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer">
-                      WhatsApp
+export default function Navbar() {
+    const [open, setOpen] = useState(false)
+    const pathname = usePathname();
+    
+    return (
+        <header className="flex flex-col z-40 fixed left-1/2 transform -translate-x-1/2 w-[95%] xs:w-[92%] justify-between items-center top-2 xs:top-4 sm:top-6 gap-1 xs:gap-2">
+            <div className="flex cursor-pointer items-center justify-between gap-1 xs:gap-2 sm:space-x-4 md:space-x-6 lg:space-x-8 border w-full md:w-fit px-2 xs:px-3 sm:px-4 md:px-6 py-2 xs:py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-slate-50/95 via-gray-50/95 to-zinc-50/95 dark:from-slate-900/95 dark:via-gray-900/95 dark:to-zinc-900/95 backdrop-blur-md border-slate-200/60 dark:border-slate-700/60 rounded-lg xs:rounded-xl shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
+               <Link href={'/'} onClick={() => setOpen(false)} className="font-bold text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl leading-tight text-nowrap bg-gradient-to-r from-slate-800 via-gray-700 to-zinc-800 dark:from-slate-200 dark:via-gray-200 dark:to-zinc-200 bg-clip-text text-transparent tracking-tight xs:tracking-normal sm:tracking-wide">
+                    Muhimpundu Anne Marie
+                </Link>
+                <div className="flex justify-between items-center gap-1 xs:gap-2 sm:gap-4 md:gap-6 lg:gap-8">
+                    <nav className="justify-between hidden md:flex gap-2 lg:gap-4 xl:gap-8 text-xs sm:text-sm lg:text-base font-medium">
+                        <Link href={'/services'} className={cn(
+                            pathname === "/services" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 tracking-wider font-semibold"
+                        )}>
+                            SERVICES
+                        </Link>
+                        <Link href={'/work'} className={cn(
+                            pathname === "/work" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 tracking-wider font-semibold"
+                        )}>
+                            WORK
+                        </Link>
+                        <Link href={'/about'} className={cn(
+                            pathname === "/about" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 tracking-wider font-semibold"
+                        )}>
+                            ABOUT
+                        </Link>
+                        <Link href={'/blog'} className={cn(
+                            pathname === "/blog" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 tracking-wider font-semibold"
+                        )}>
+                            BLOG
+                        </Link>
+                    </nav>
+                    <Link href={'/contact'} className="px-1.5 xs:px-2 sm:px-3 md:px-4 lg:px-6 py-1.5 xs:py-2 sm:py-2.5 bg-gradient-to-r from-slate-800 via-gray-800 to-zinc-800 hover:from-slate-700 hover:via-gray-700 hover:to-zinc-700 dark:from-slate-200 dark:via-gray-200 dark:to-zinc-200 dark:hover:from-slate-100 dark:hover:via-gray-100 dark:hover:to-zinc-100 text-white dark:text-slate-900 text-nowrap text-[10px] xs:text-xs sm:text-sm lg:text-base font-bold rounded-md xs:rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 tracking-tight xs:tracking-normal sm:tracking-wide">
+                        <span className="hidden xs:inline">LET&apos;S TALK</span>
+                        <span className="xs:hidden">TALK</span>
                     </Link>
-                  </Button>
+                    <button 
+                        className="block md:hidden p-1 xs:p-1.5 sm:p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-md xs:rounded-lg transition-all duration-300" 
+                        onClick={() => setOpen(!open)}
+                    >
+                        {open ? <XIcon size={16} className="xs:w-5 xs:h-5" /> : <MenuIcon size={16} className="xs:w-5 xs:h-5" />}
+                    </button>
                 </div>
-              </div>
             </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-
-      {/* Loading bar at the bottom of navbar */}
-      <LoadingBar isLoading={isLoading} />
-    </motion.div>
-  )
+            <div className={cn(
+                open ? "flex animate-in fade-in-80 slide-in-from-top-4 w-full" : "hidden animate-out fade-out-80 slide-out-to-top-4", 
+                "items-center justify-between mx-auto border px-4 xs:px-6 sm:px-8 py-6 xs:py-7 sm:py-8 bg-gradient-to-br from-slate-50/95 via-gray-50/95 to-zinc-50/95 dark:from-slate-900/95 dark:via-gray-900/95 dark:to-zinc-900/95 backdrop-blur-md border-slate-200/60 dark:border-slate-700/60 rounded-lg xs:rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50"
+            )}>
+                <div className="flex flex-col w-full justify-between items-center gap-4 xs:gap-6 sm:gap-8">
+                    <nav className="flex flex-col justify-between items-center space-y-3 xs:space-y-4 sm:space-y-6">
+                        <Link href={'/services'} onClick={() => setOpen(false)} className={cn(
+                            pathname === "/services" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 text-base xs:text-lg sm:text-xl font-semibold tracking-wider"
+                        )}>
+                            SERVICES
+                        </Link>
+                        <Link href={'/work'} onClick={() => setOpen(false)} className={cn(
+                            pathname === "/work" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 text-lg font-semibold tracking-wider"
+                        )}>
+                            WORK
+                        </Link>
+                        <Link href={'/about'} onClick={() => setOpen(false)} className={cn(
+                            pathname === "/about" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 text-lg font-semibold tracking-wider"
+                        )}>
+                            ABOUT
+                        </Link>
+                        <Link href={'/blog'} onClick={() => setOpen(false)} className={cn(
+                            pathname === "/blog" 
+                                ? "text-slate-700 dark:text-slate-300 border-b-2 border-slate-600 dark:border-slate-400" 
+                                : "text-slate-600/80 dark:text-slate-400/80 hover:text-slate-800 dark:hover:text-slate-200", 
+                            "hover:border-b-2 hover:border-slate-500 dark:hover:border-slate-400 transition-all duration-300 pb-1 text-lg font-semibold tracking-wider"
+                        )}>
+                            BLOG
+                        </Link>
+                    </nav>
+                    <Link href={'/contact'} onClick={() => setOpen(false)} className="px-4 xs:px-6 sm:px-8 py-2.5 xs:py-3 bg-gradient-to-r from-slate-800 via-gray-800 to-zinc-800 hover:from-slate-700 hover:via-gray-700 hover:to-zinc-700 dark:from-slate-200 dark:via-gray-200 dark:to-zinc-200 dark:hover:from-slate-100 dark:hover:via-gray-100 dark:hover:to-zinc-100 w-full text-center text-white dark:text-slate-900 text-base xs:text-lg sm:text-xl font-bold rounded-md xs:rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 tracking-wide">
+                        LET&apos;S TALK
+                    </Link>
+                </div>
+            </div>
+        </header>
+    )
 }
