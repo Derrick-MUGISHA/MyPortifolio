@@ -121,7 +121,7 @@ export default function ContactPage() {
                       <span className="sr-only">LinkedIn</span>
                     </Link>
                   </Button>
-                  <WhatsAppButton phoneNumber="+250795306939" size="icon" variant="outline" className="rounded-full">
+                  <WhatsAppButton phoneNumber="+250795306939" size="icon" variant="outline" className="items-center rounded-full">
                     <span className="sr-only">WhatsApp</span>
                   </WhatsAppButton>
                   <Button asChild variant="outline" size="icon" className="rounded-full">

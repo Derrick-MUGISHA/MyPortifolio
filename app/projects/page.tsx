@@ -9,8 +9,20 @@ import { ProjectFilter } from "@/components/project-filter"
 export default function ProjectsPage() {
   const githubUsername = "muhimpunduanne"
 
+  type Project = {
+    id: string
+    title: string
+    description: string
+    image: string
+    tags: string[]
+    demoUrl: string
+    githubUrl: string
+    category: string
+    type: "personal" | "github"
+  }
+
   // Sample projects data with categories and types
-  const projects = [
+  const projects: Project[] = [
     {
       id: "project1",
       title: "E-Commerce Platform",
