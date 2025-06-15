@@ -28,8 +28,13 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
         />
+        {/* ✅ Google Fonts: Space Grotesk and Figtree */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className={cn("min-h-screen bg-background antialiased")}>
+      <body className={cn("min-h-screen bg-background antialiased font-primary")}>
         <div className="noise-texture"></div>
         <div className="dot-grid"></div>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>

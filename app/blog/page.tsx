@@ -35,7 +35,7 @@ export default function BlogPage() {
       date: "March 15, 2023",
       readTime: "5 min read",
       category: "Frontend",
-      image: "/placeholder.svg?height=400&width=600&text=TailwindCSS",
+      image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/0*rP2veyqlnaNffyvD.png",
       slug: "building-responsive-uis-with-tailwindcss",
     },
     {
@@ -45,9 +45,9 @@ export default function BlogPage() {
       date: "February 22, 2023",
       readTime: "8 min read",
       category: "React",
-      image: "/placeholder.svg?height=400&width=600&text=React+State",
+      image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*FzBO2nsSQSaYJWxO8kFuDA.png",
       slug: "state-management-in-react",
-      hasVideo: true,
+      // hasVideo: true,
     },
     {
       id: "post-3",
@@ -56,9 +56,9 @@ export default function BlogPage() {
       date: "January 10, 2023",
       readTime: "6 min read",
       category: "Next.js",
-      image: "/placeholder.svg?height=400&width=600&text=Next.js+14",
+      image: "https://bitrock.it/wp-content/uploads/2024/01/Blog-Post_Visuals-1.png",
       slug: "getting-started-with-nextjs-14",
-      hasVideo: true,
+      // hasVideo: true,
     },
     {
       id: "post-4",
@@ -67,7 +67,7 @@ export default function BlogPage() {
       date: "December 5, 2022",
       readTime: "10 min read",
       category: "Backend",
-      image: "/placeholder.svg?height=400&width=600&text=Node.js+API",
+      image: "https://assets.toptal.io/images?url=https%3A%2F%2Fbs-uploads.toptal.io%2Fblackfish-uploads%2Fcomponents%2Fblog_post_page%2F4085508%2Fcover_image%2Fregular_1708x683%2Fcover-secure-rest-api-in-nodejs-80fb5c435d64e62d270b46dc5618d74e.png",
       slug: "building-restful-api-nodejs-express",
     },
     {
@@ -77,7 +77,7 @@ export default function BlogPage() {
       date: "November 18, 2022",
       readTime: "7 min read",
       category: "CSS",
-      image: "/placeholder.svg?height=400&width=600&text=CSS+Grid",
+      image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*zZIq2QMikx1mcCTpoA4lLg.png",
       slug: "mastering-css-grid-layout",
     },
     {
@@ -87,7 +87,7 @@ export default function BlogPage() {
       date: "October 3, 2022",
       readTime: "9 min read",
       category: "TypeScript",
-      image: "/placeholder.svg?height=400&width=600&text=TypeScript",
+      image: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2F4duyc0xvyt1xwqzv8x1l.jpg",
       slug: "introduction-to-typescript",
       hasVideo: true,
     },
@@ -204,11 +204,11 @@ export default function BlogPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <h2 className="text-2xl font-bold mb-4 text-cream">Subscribe to My Newsletter</h2>
+        <h2 className="text-2xl font-bold mb-4 text-cream">All these are My key Points</h2>
         <p className="text-cream/70 mb-8 max-w-2xl mx-auto">
           Stay updated with my latest articles, tutorials, and insights on web development and technology.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+        {/* <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
           <Input
             type="email"
             placeholder="Your email address"
@@ -217,7 +217,7 @@ export default function BlogPage() {
           <Button className="btn-fancy">
             Subscribe <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-        </div>
+        </div> */}
       </motion.div>
     </div>
   )
