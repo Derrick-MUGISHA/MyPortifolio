@@ -4,22 +4,69 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Github, Linkedin, Mail, ExternalLink } from "lucide-react";
+import {
+  ArrowRight,
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { GithubProjects } from "@/components/github-projects";
-import { GithubContributions } from "@/components/github-contributions";
+// import { GithubContributions } from "@/components/github-contributions";
 import { CircularProgress } from "@/components/circular-progress";
 import { TestimonialSlider } from "@/components/testimonial-slider";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DecorativeUnderline } from "@/components/decorative-underline";
 import { useMobile } from "@/hooks/use-mobile";
 import { FloatingContactButtons } from "@/components/floating-contact-buttons";
 import IconCloud from "@/components/ui/icon-cloud";
+import BlurFade from "@/components/ui/blur-fade";
+import { IconCloudComponent } from "@/components/widgets/IconCloudComponent";
+import { MyServices } from "./database/services";
+import GitHubActivity from "@/components/github-contributions";
+import { GitHubData } from "@/types/github";
+import { fetchGitHubData } from "@/lib/github";
+import allProjects from "./database/projects";
+import MarqueeDemo from "@/components/marquee-demo";
+import { LTRVersion } from "@/components/demo";
+// import { BlurFade } from "@/components/blur-fade";
 
-export default function HomePage() {
+export default function page() {
+const jssStyles = {
+  backgroundImage: `linear-gradient(to bottom, rgba(39, 39, 42, 0), rgba(9, 9, 11, 1)), url("https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png")`,
+  backgroundSize: "cover", // <- changed from "contain"
+  backgroundAttachment: "fixed",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  transition: "background-image 0.3s ease-in-out",
+  willChange: "background-image",
+};
+
   const targetRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobile();
   const githubUsername = "muhimpunduanne";
+
+  const [gitHubData, setGitHubData] = useState<GitHubData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const getGitHubData = async () => {
+      try {
+        const data = await fetchGitHubData("muhimpunduanne");
+        setGitHubData(data);
+      } catch (error) {
+        console.error("Failed to fetch GitHub data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getGitHubData();
+  }, []);
 
   const skills = [
     { name: "Web Development", progress: 90 },
@@ -114,54 +161,38 @@ export default function HomePage() {
     <div className="overflow-x-hidden w-full">
       {/* Hero Section */}
       <section
-        ref={targetRef}
-        className="hero-section relative min-h-screen flex items-center justify-center px-4"
+        id="home"
+        className="flex flex-col mx-auto justify-center items-center w-full pt-48 pb-36 px-4"
+        style={jssStyles}
       >
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png"
-            alt="Background"
-            fill
-            className="object-cover opacity-80"
-            priority
-          />
-        </div>
+        <BlurFade delay={0.25} className="mt-80" inView>
+          <h1 className="text-center z-40">
+            <span className="text-primary mb-10 text-2xl md:text-4xl block">
+              Hello, I&apos;m
+            </span>
+            <span className="text-primary text-4xl md:text-6xl block">
+              MUHIMPUNDU Anne Marie
+            </span>
+          </h1>
+        </BlurFade>
 
-        {/* Decorative Circles */}
-        <div className="decorative-circle decorative-circle-1 animate-pulse"></div>
-        <div className="decorative-circle decorative-circle-2 animate-pulse"></div>
+        <BlurFade delay={0.5} inView>
+          <h2 className="text-center text-3xl md:text-5xl mt-10">
+            A Software Developer
+          </h2>
+        </BlurFade>
 
-        <div className="container max-w-4xl mx-auto relative z-10 text-center w-full">
-          <motion.div
-            className="space-y-6 md:space-y-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
+        <BlurFade delay={0.5} inView>
+          <h3 className="text-center text-xl text-wrap md:text-2xl mt-4">
+            I design and build software and systems that respond to user needs
+            and vision.
+          </h3>
+        </BlurFade>
+
+        <BlurFade delay={0.5} inView>
+          <div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <Badge className="px-3 py-1 text-sm mb-4 mt-12 sm:mt-0 bg-amber/20 text-amber border border-amber/30 backdrop-blur-sm inline-block">
-                Creative Software Developer
-              </Badge>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-cream mb-4">
-                Muhimpundu Anne Marie
-              </h1>
-              <DecorativeUnderline width={isMobile ? "150px" : "200px"} />
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold tracking-tight leading-tight mt-2 mb-4 md:mb-6 text-cream">
-                Building Digital Experiences for the Modern{" "}
-                <span className="gradient-text">World</span>
-              </h2>
-              <p className="text-base sm:text-lg md:text-xl text-cream/80 mt-2 md:mt-4 max-w-xl mx-auto">
-                I build modern web and mobile applications with a focus on user
-                experience and performance.
-              </p>
-            </motion.div>
-
-            <motion.div
-              className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center"
+              className="flex mt-12 flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -178,6 +209,7 @@ export default function HomePage() {
                   View Projects <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+
               <Button
                 asChild
                 variant="outline"
@@ -237,46 +269,101 @@ export default function HomePage() {
                 </Button>
               </Link>
             </motion.div>
-          </motion.div>
-        </div>
+          </div>
+        </BlurFade>
       </section>
 
       {/* Skills Section */}
-      <section className="section-container py-12 md:py-24 animated-bg w-full">
-        <div className="container max-w-5xl mx-auto px-4">
+      <section
+        id="expertise-combined"
+        className="relative w-full py-20 px-4 md:px-8 overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-200 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900"
+      >
+        {/* Icon Cloud as Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              opacity: 20, // Increased from 0.10 to 0.25
+              filter: "brightness(1.1) contrast(1.1)", // Slight enhancement for visibility
+            }}
+          >
+            <IconCloudComponent />
+          </div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* Section Header */}
           <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center text-cream section-header"
+            className="text-4xl md:text-5xl font-bold text-center text-zinc-800 dark:text-white mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
           >
-            My Expertise
+            My Expertise & Services
           </motion.h2>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 w-full">
+          {/* Skills Circle Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-24">
             {skills.map((skill, index) => (
               <motion.div
-                key={index}
-                className="relative flex flex-col items-center text-center custom-card p-6 bg-white rounded-lg shadow-lg overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                key={`skill-${index}`}
+                className="relative bg-white/30 dark:bg-zinc-700/30 backdrop-blur-md p-6 rounded-2xl flex flex-col items-center shadow-xl border border-white/20 dark:border-zinc-600/20"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 50, scale: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                
-
-                {/* Circular Progress */}
                 <CircularProgress
                   value={skill.progress}
-                  size={isMobile ? 80 : 100}
-                  strokeWidth={isMobile ? 5 : 6}
+                  size={100}
+                  strokeWidth={6}
                   label={skill.name}
                   unit="%"
                 />
+                <span className="mt-4 text-lg font-semibold text-zinc-800 dark:text-white">
+                  {skill.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
 
-                {/* Skill Name */}
-                <span className="mt-4 font-semibold text-lg">{skill.name}</span>
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {MyServices.map((service, index) => (
+              <motion.div
+                key={`service-${index}`}
+                className="relative group bg-white/30 dark:bg-zinc-700/30 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-zinc-600/20 transition-transform hover:-translate-y-2"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                  0{index + 1}
+                </span>
+                <h4 className="text-2xl font-bold uppercase mt-2 text-zinc-800 dark:text-white">
+                  {service.name}
+                </h4>
+                <p className="my-4 text-sm text-zinc-600 dark:text-zinc-300">
+                  {service.description}
+                </p>
+
+                <ul className="flex flex-wrap gap-2 mt-2">
+                  {service.technologies.map((tech) => (
+                    <li
+                      key={tech}
+                      className="px-3 py-1 text-xs bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-100 rounded-full"
+                    >
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href={`/services#${service.slug}`}
+                  className="flex items-center gap-2 mt-6 text-sm text-cream"
+                >
+                  <ArrowUpIcon className="rotate-45 w-4 h-4 transition-transform group-hover:rotate-90" />
+                  <span>ABOUT {service.name.toUpperCase()}</span>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -284,145 +371,64 @@ export default function HomePage() {
       </section>
 
       {/* GitHub Activity Section */}
-      <section className="section-container py-12 md:py-24 w-full">
-        <div className="container max-w-5xl mx-auto px-4">
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center text-cream section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            GitHub Activity
-          </motion.h2>
-          <motion.div
-            className="w-full custom-card p-4 md:p-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <GithubContributions username={githubUsername} />
-          </motion.div>
-        </div>
-      </section>
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-cream mb-6">
+              GitHub Activity
+            </h2>
+          </div>
 
-      {/* GitHub Projects */}
-      <section className="section-container py-12 md:py-24 w-full">
-        <div className="container max-w-5xl mx-auto px-4">
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center text-cream section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            GitHub Projects
-          </motion.h2>
-          <motion.div
-            className="w-full"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <GithubProjects username={githubUsername} />
-          </motion.div>
+          <div className="max-w-5xl mx-auto">
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <GitHubActivity data={gitHubData} />
+            )}
+
+            <div className="mt-8 text-center">
+              <Button
+                asChild
+                variant="outline"
+                className="text-cream border-cream hover:bg-white hover:text-black"
+              >
+                <a
+                  href="https://github.com/muhimpunduanne"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <Github className="mr-2 h-4 w-4" />
+                  View GitHub Profile
+                </a>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Custom Projects Section */}
-      <section className="section-container py-12 md:py-24 animated-bg w-full">
-        <div className="container max-w-5xl mx-auto px-4">
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center text-cream section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
+      <section
+        id="works"
+        className="max-w-screen-xl mx-auto w-full px-4 pt-32 pb-12 lg:pb-32"
+      >
+        <div className="flex justify-between items-center w-full">
+          <h3 className="text-3xl md:text-4xl text-zinc-800 dark:text-zinc-300">
+            Selected project
+          </h3>
+          <Link
+            href="/work"
+            className="flex items-center justify-center gap-4 group"
           >
-            Featured Projects
-          </motion.h2>
-
-          <div className="grid gap-6 md:gap-8 w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {customProjects.map(
-              ({ id, title, description, image, tags, liveUrl, sourceUrl }) => (
-                <motion.div
-                  key={id}
-                  className="custom-card rounded-lg shadow-lg overflow-hidden flex flex-col bg-dark w-full"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                >
-                  <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
-                    <Image
-                      src={image}
-                      alt={title}
-                      fill
-                      className="object-cover object-center transition-transform duration-300 ease-in-out hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      priority
-                    />
-                  </div>
-                  <div className="p-4 md:p-5 flex flex-col flex-grow">
-                    <h3 className="text-lg md:text-xl font-semibold mb-2 text-cream">
-                      {title}
-                    </h3>
-                    <p className="text-sm md:text-base text-cream/80 flex-grow mb-3">
-                      {description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="bg-amber/10 text-amber border-amber/30 px-2 py-1 text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        aria-label={`View live project: ${title}`}
-                      >
-                        <a
-                          href={liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1"
-                        >
-                          Live <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </Button>
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        aria-label={`View source code: ${title}`}
-                      >
-                        <a
-                          href={sourceUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1"
-                        >
-                          Code <Github className="h-3 w-3" />
-                        </a>
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            )}
-          </div>
+            <span className="border border-zinc-800 dark:border-zinc-500 dark:hover:border-zinc-200 p-2 rounded-full bg-zinc-300 dark:bg-zinc-800">
+              <ArrowUpIcon className="rotate-45 group-hover:rotate-90 transition-transform duration-300" />
+            </span>
+            <span className="text-base md:text-xl text-cream">SEE ALL</span>
+          </Link>
         </div>
+        <LTRVersion />
       </section>
 
       {/* Testimonials Section */}
@@ -438,7 +444,7 @@ export default function HomePage() {
             Testimonials
           </motion.h2>
           <div className="w-full">
-            <TestimonialSlider testimonials={testimonials} />
+            <MarqueeDemo />
           </div>
         </div>
       </section>
