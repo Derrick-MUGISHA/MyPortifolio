@@ -90,6 +90,14 @@ const config = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+        "marquee-vertical": {
+          "0%": { transform: "translateY(0%)" },
+          "100%": { transform: "translateY(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -97,6 +105,8 @@ const config = {
         shimmer: "shimmer 8s infinite linear",
         float: "float 6s ease-in-out infinite",
         pulse: "pulse 3s ease-in-out infinite",
+        marquee: "marquee var(--duration, 40s) linear infinite",
+        "marquee-vertical": "marquee-vertical var(--duration, 40s) linear infinite",
       },
       backgroundImage: {
         "grid-pattern":
@@ -109,6 +119,7 @@ const config = {
       },
     },
   },
+
   plugins: [require("tailwindcss-animate")],
 } satisfies Config
 

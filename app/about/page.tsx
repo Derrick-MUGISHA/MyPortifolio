@@ -35,7 +35,7 @@ export default function AboutPage() {
 
   const galleryImages = [
     {
-      src: "https://i.postimg.cc/C1fnWg92/pexels-soldiervip-1391498.jpg",
+      src: "https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png",
       alt: "Anne Marie at a tech conference",
     },
     {

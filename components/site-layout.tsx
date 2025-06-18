@@ -1,6 +1,7 @@
 import type React from "react"
-import { MainNav } from "@/components/main-nav"
-import { SiteFooter } from "@/components/site-footer"
+import { SiteFooter } from "./site-footer"
+import { MainNav } from "./main-nav"
+
 
 interface SiteLayoutProps {
   children: React.ReactNode

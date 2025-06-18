@@ -4,27 +4,70 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Github, Linkedin, Mail, ExternalLink, Star, GitFork } from "lucide-react";
+import {
+  ArrowRight,
+  Github,
+  Linkedin,
+  Mail,
+  ExternalLink,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { GithubProjects } from "@/components/github-projects";
-import { GithubContributions } from "@/components/github-contributions";
+// import { GithubContributions } from "@/components/github-contributions";
 import { CircularProgress } from "@/components/circular-progress";
 import { TestimonialSlider } from "@/components/testimonial-slider";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DecorativeUnderline } from "@/components/decorative-underline";
 import { useMobile } from "@/hooks/use-mobile";
 import { FloatingContactButtons } from "@/components/floating-contact-buttons";
+import IconCloud from "@/components/ui/icon-cloud";
+import BlurFade from "@/components/ui/blur-fade";
+import { IconCloudComponent } from "@/components/widgets/IconCloudComponent";
+import { MyServices } from "./database/services";
+import GitHubActivity from "@/components/github-contributions";
+import { GitHubData } from "@/types/github";
+import { fetchGitHubData } from "@/lib/github";
+import allProjects from "./database/projects";
+import MarqueeDemo from "@/components/marquee-demo";
+import { LTRVersion } from "@/components/demo";
+// import { BlurFade } from "@/components/blur-fade";
 
-export default function HomePage() {
-  // Refs for scroll animations
+export default function page() {
+const jssStyles = {
+  backgroundImage: `linear-gradient(to bottom, rgba(39, 39, 42, 0), rgba(9, 9, 11, 1)), url("https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png")`,
+  backgroundSize: "cover", // <- changed from "contain"
+  backgroundAttachment: "fixed",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  transition: "background-image 0.3s ease-in-out",
+  willChange: "background-image",
+};
+
   const targetRef = useRef<HTMLDivElement>(null);
-
   const isMobile = useMobile();
-
-  // GitHub username
   const githubUsername = "muhimpunduanne";
 
-  // Skills with progress
+  const [gitHubData, setGitHubData] = useState<GitHubData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const getGitHubData = async () => {
+      try {
+        const data = await fetchGitHubData("muhimpunduanne");
+        setGitHubData(data);
+      } catch (error) {
+        console.error("Failed to fetch GitHub data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getGitHubData();
+  }, []);
+
   const skills = [
     { name: "Web Development", progress: 90 },
     { name: "UI/UX Design", progress: 85 },
@@ -32,7 +75,6 @@ export default function HomePage() {
     { name: "Backend", progress: 80 },
   ];
 
-  // Non-GitHub projects with enhanced styling data
   const customProjects = [
     {
       id: "project1",
@@ -43,8 +85,6 @@ export default function HomePage() {
       tags: ["React", "Node.js", "MongoDB", "Stripe"],
       liveUrl: "https://example-ecommerce.com",
       sourceUrl: "https://github.com/example/ecommerce",
-      gradient: "from-blue-500/20 via-purple-500/20 to-pink-500/20",
-      accent: "blue",
     },
     {
       id: "project2",
@@ -56,8 +96,6 @@ export default function HomePage() {
       tags: ["React Native", "Firebase", "Redux", "Health API"],
       liveUrl: "https://example-fitness.com",
       sourceUrl: "https://github.com/example/fitness-app",
-      gradient: "from-green-500/20 via-emerald-500/20 to-teal-500/20",
-      accent: "green",
     },
     {
       id: "project3",
@@ -69,12 +107,9 @@ export default function HomePage() {
       tags: ["Next.js", "OpenAI API", "TailwindCSS", "Vercel"],
       liveUrl: "https://example-ai-generator.com",
       sourceUrl: "https://github.com/example/ai-generator",
-      gradient: "from-orange-500/20 via-red-500/20 to-pink-500/20",
-      accent: "orange",
     },
   ];
 
-  // Testimonials with ratings
   const testimonials = [
     {
       id: 1,
@@ -82,7 +117,7 @@ export default function HomePage() {
       role: "Client",
       company: "TechStart Inc.",
       avatar:
-        "https://i.postimg.cc/3NcXTNWg/pexels-moh-adbelghaffar-771742.jpg",
+        "https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png",
       testimonial:
         "Anne Marie delivered our project ahead of schedule with outstanding quality. Her attention to detail and problem-solving skills are remarkable.",
       rating: 5,
@@ -93,7 +128,7 @@ export default function HomePage() {
       role: "co-worker",
       company: "InnovateLabs",
       avatar:
-        "https://i.postimg.cc/3NcXTNWg/pexels-moh-adbelghaffar-771742.jpg",
+        "https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png",
       testimonial:
         "Working with Anne Marie was a game-changer for our startup. She not only built a robust application but also provided valuable insights that improved our overall product strategy.",
       rating: 5,
@@ -104,7 +139,7 @@ export default function HomePage() {
       role: "Marketing Director",
       company: "TechSphere",
       avatar:
-        "https://i.postimg.cc/3NcXTNWg/pexels-moh-adbelghaffar-771742.jpg",
+        "https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png",
       testimonial:
         "Anne Marie's technical expertise helped us transform our outdated website into a modern, user-friendly platform that increased our conversion rates significantly.",
       rating: 4,
@@ -115,7 +150,7 @@ export default function HomePage() {
       role: "CTO",
       company: "FutureTech",
       avatar:
-        "https://i.postimg.cc/3NcXTNWg/pexels-moh-adbelghaffar-771742.jpg",
+        "https://i.postimg.cc/jjRg1M59/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png",
       testimonial:
         "We've worked with many developers, but Anne Marie stands out for her ability to understand business requirements and translate them into elegant technical solutions.",
       rating: 5,
@@ -123,454 +158,299 @@ export default function HomePage() {
   ];
 
   return (
-    <>
-      {/* Hero Section with enhanced responsive styling */}
+    <div className="overflow-x-hidden w-full">
+      {/* Hero Section */}
       <section
-        ref={targetRef}
-        className="hero-section flex items-center justify-center min-h-screen relative bg-black overflow-hidden"
+        id="home"
+        className="flex flex-col mx-auto justify-center items-center w-full pt-48 pb-36 px-4"
+        style={jssStyles}
       >
-        {/* Background Image - Optimized for different screen sizes */}
-        <div className="absolute inset-0 z-0 w-full h-full">
-          <Image
-            src="https://i.postimg.cc/4x70SJgH/Chat-GPT-Image-Jun-6-2025-01-25-43-PM.png"
-            alt="Background"
-            fill
-            className="object-cover object-center w-full h-full opacity-60 sm:opacity-80"
-            priority
-            sizes="100vw"
-          />
-        </div>
+        <BlurFade delay={0.25} className="mt-80" inView>
+          <h1 className="text-center z-40">
+            <span className="text-primary mb-10 text-2xl md:text-4xl block">
+              Hello, I&apos;m
+            </span>
+            <span className="text-primary text-4xl md:text-6xl block">
+              MUHIMPUNDU Anne Marie
+            </span>
+          </h1>
+        </BlurFade>
 
-        {/* Decorative Elements - Hide on very small screens */}
-        <div className="decorative-circle decorative-circle-1 animate-pulse hidden sm:block"></div>
-        <div className="decorative-circle decorative-circle-2 animate-pulse hidden sm:block"></div>
+        <BlurFade delay={0.5} inView>
+          <h2 className="text-center text-3xl md:text-5xl mt-10">
+            A Software Developer
+          </h2>
+        </BlurFade>
 
-        {/* Hero Content - Enhanced responsive padding and spacing */}
-        <div className="container px-4 sm:px-6 lg:px-8 hero-content z-10 w-full">
-          <div className="max-w-4xl mx-auto text-center">
+        <BlurFade delay={0.5} inView>
+          <h3 className="text-center text-xl text-wrap md:text-2xl mt-4">
+            I design and build software and systems that respond to user needs
+            and vision.
+          </h3>
+        </BlurFade>
+
+        <BlurFade delay={0.5} inView>
+          <div>
             <motion.div
-              className="space-y-4 sm:space-y-6 md:space-y-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
+              className="flex mt-12 flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              {/* Header Section - Better responsive text scaling */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="space-y-3 sm:space-y-4"
-              >
-                <Badge className="px-2 py-1 text-xs sm:text-sm mb-2 sm:mb-4 bg-amber/20 text-amber border border-amber/30 backdrop-blur-sm">
-                  Creative Software Developer
-                </Badge>
-                
-                <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight leading-[1.1] text-cream mb-2 sm:mb-4 px-2">
-                  Muhimpundu Anne Marie
-                </h1>
-                
-                <div className="flex justify-center mb-3 sm:mb-4">
-                  <DecorativeUnderline width={isMobile ? "120px" : "200px"} />
-                </div>
-                
-                <h2 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-tight leading-tight mb-3 sm:mb-4 md:mb-6 text-cream px-2">
-                  Building Digital Experiences for the Modern{" "}
-                  <span className="gradient-text">World</span>
-                </h2>
-                
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl text-cream/80 mt-2 md:mt-4 max-w-3xl mx-auto px-4">
-                  I build modern web and mobile applications with a focus on user experience and performance.
-                </p>
-              </motion.div>
-
-              {/* Buttons - Improved mobile layout */}
-             <motion.div
-          className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Button
-            asChild
-            size={isMobile ? "default" : "lg"}
-            className="btn-fancy w-full sm:w-auto"
-          >
-            <Link href="/projects">
-              View Projects <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size={isMobile ? "default" : "lg"}
-            className="rounded-full bg-transparent text-cream border-cream hover:bg-cream/10 w-full sm:w-auto"
-          >
-            <Link href="/contact">Get in Touch</Link>
-          </Button>
-        </motion.div>
-
-              {/* Social Icons - Better spacing and touch targets */}
-              <motion.div
-                className="flex gap-3 sm:gap-4 justify-center pt-2 sm:pt-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <Link
-                  href={`https://github.com/${githubUsername}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream w-10 h-10 sm:w-12 sm:h-12"
-                  >
-                    <Github className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span className="sr-only">GitHub</span>
-                  </Button>
-                </Link>
-                <Link
-                  href="https://linkedin.com/in/annemarie"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream w-10 h-10 sm:w-12 sm:h-12"
-                  >
-                    <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span className="sr-only">LinkedIn</span>
-                  </Button>
-                </Link>
-                <Link href="mailto:contact@annemarie.dev">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream w-10 h-10 sm:w-12 sm:h-12"
-                  >
-                    <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
-                    <span className="sr-only">Email</span>
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section - Improved responsive grid */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24 animated-bg">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-cream section-header px-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            My Expertise
-          </motion.h2>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
-            {skills.map((skill, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col items-center text-center custom-card p-3 sm:p-4 md:p-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <CircularProgress
-                  value={skill.progress}
-                  size={isMobile ? 80 : 120}
-                  strokeWidth={isMobile ? 4 : 8}
-                  label={skill.name}
-                  unit="%"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* GitHub Activity Section - Enhanced to match GitHub look */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-cream section-header px-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            GitHub Activity
-          </motion.h2>
-          <motion.div
-            className="max-w-6xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            {/* GitHub-style container */}
-            <div className="bg-[#0d1117] border border-[#30363d] rounded-lg p-4 sm:p-6 shadow-2xl">
-              {/* Header section like GitHub */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#30363d]">
-                <div className="flex items-center gap-3">
-                  <Github className="h-5 w-5 text-[#7d8590]" />
-                  <span className="text-[#f0f6fc] font-medium">@{githubUsername}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-[#7d8590]">
-                  <span>Contributions in the last year</span>
-                </div>
-              </div>
-              
-              {/* Contributions graph */}
-              <div className="overflow-x-auto">
-                <GithubContributions username={githubUsername} />
-              </div>
-              
-              {/* GitHub stats footer */}
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#30363d] text-sm">
-                <span className="text-[#7d8590]">
-                  Learn how we count contributions
-                </span>
-                <div className="flex items-center gap-4 text-[#7d8590]">
-                  <span className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-[#39d353] rounded-sm"></div>
-                    Less
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <div className="w-3 h-3 bg-[#26a641] rounded-sm"></div>
-                    More
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* GitHub Projects - Keep existing different design */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-cream section-header px-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            GitHub Projects
-          </motion.h2>
-          <motion.div
-            className="max-w-6xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <GithubProjects username={githubUsername} />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Projects - Enhanced with no hover effects, better design */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-cream section-header px-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            Featured Projects
-          </motion.h2>
-
-          <div className="grid gap-6 sm:gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-            {customProjects.slice(0, isMobile ? 2 : 3).map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative"
-              >
-                {/* Enhanced project card with no hover effects */}
-                <div className="relative h-[400px] sm:h-[420px] md:h-[450px] lg:h-[480px] rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-black/40 via-black/20 to-transparent backdrop-blur-sm">
-                  
-                  {/* Animated gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-30`} />
-                  
-                  {/* Background image with better overlay */}
-                  <div className="absolute inset-0">
-                    <Image
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      fill
-                      className="object-cover opacity-15"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                  </div>
-
-                  {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-gradient-to-br from-white/10 to-transparent border border-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 opacity-80" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="relative z-10 p-6 sm:p-7 md:p-8 h-full flex flex-col">
-                    
-                    {/* Title */}
-                    <h3 className="font-bold text-lg sm:text-xl md:text-2xl mb-3 sm:mb-4 text-cream leading-tight">
-                      {project.title}
-                    </h3>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4 sm:mb-5">
-                      {project.tags.slice(0, isMobile ? 3 : 4).map((tag, i) => (
-                        <Badge
-                          key={i}
-                          variant="secondary"
-                          className="text-xs bg-white/10 text-cream border border-white/20 backdrop-blur-sm px-2.5 py-1 font-medium"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-cream/80 text-sm sm:text-base mb-6 sm:mb-8 line-clamp-3 leading-relaxed flex-grow">
-                      {project.description}
-                    </p>
-
-                    {/* Action buttons - Enhanced styling */}
-                    <div className="flex flex-col xs:flex-row gap-3 mt-auto">
-                      <Button
-                        asChild
-                        size="sm"
-                        className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-black font-semibold min-h-[42px] text-sm shadow-lg border-0 transition-all duration-300"
-                      >
-                        <Link
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center justify-center gap-2"
-                        >
-                          <ExternalLink className="h-4 w-4" /> 
-                          <span>Live Demo</span>
-                        </Link>
-                      </Button>
-
-                      <Button
-                        asChild
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 border-white/30 text-cream hover:bg-white/10 backdrop-blur-sm min-h-[42px] text-sm font-medium transition-all duration-300"
-                      >
-                        <Link
-                          href={project.sourceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex items-center justify-center gap-2"
-                        >
-                          <Github className="h-4 w-4" /> 
-                          <span>Source</span>
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Subtle border glow */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-50 pointer-events-none" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Show more projects button */}
-          {isMobile && customProjects.length > 2 && (
-            <div className="flex justify-center mt-8 sm:mt-10">
-              <Button
-                asChild
-                variant="outline"
-                className="border-amber/50 text-cream hover:bg-amber/20 w-full xs:w-auto max-w-xs px-8 py-3"
-              >
-                <Link href="/projects" className="flex items-center justify-center gap-2">
-                  <span>View All Projects</span>
-                  <ExternalLink className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Testimonials Section - Enhanced mobile layout */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 md:mb-12 text-center text-cream section-header px-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            What Clients Say
-          </motion.h2>
-
-          <motion.div
-            className="max-w-6xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <TestimonialSlider testimonials={testimonials} />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section - Better responsive text and spacing */}
-      <section className="section-container py-8 sm:py-12 md:py-16 lg:py-24">
-        <div className="container px-4 sm:px-6 md:px-8">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="glow-effect p-4 sm:p-6 md:p-8 lg:p-12 border border-amber/20 bg-teal/20 backdrop-blur-sm rounded-2xl">
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 sm:mb-4 text-cream px-2">
-                Ready to bring your ideas to life?
-              </h2>
-              <p className="text-sm sm:text-base md:text-lg text-cream/70 mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto px-2">
-                Let's collaborate to create something amazing together. I'm
-                currently available for freelance work and new opportunities.
-              </p>
               <Button
                 asChild
                 size={isMobile ? "default" : "lg"}
-                className="btn-fancy w-full xs:w-auto min-w-[160px]"
+                className="btn-fancy w-auto min-w-[140px]"
               >
-                <Link href="/contact" className="flex items-center justify-center">
-                  Get in Touch <ArrowRight className="ml-2 h-4 w-4" />
+                <Link
+                  href="/projects"
+                  className="flex items-center justify-center gap-2"
+                >
+                  View Projects <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size={isMobile ? "default" : "lg"}
+                className="rounded-full bg-transparent text-cream border-cream hover:bg-cream/10 w-auto min-w-[140px]"
+              >
+                <Link
+                  href="/contact"
+                  className="flex items-center justify-center"
+                >
+                  Get in Touch
+                </Link>
+              </Button>
+            </motion.div>
+
+            <motion.div
+              className="flex gap-4 justify-center pt-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Link
+                href={`https://github.com/${githubUsername}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream"
+                >
+                  <Github className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link
+                href="https://linkedin.com/in/annemarie"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="mailto:contact@annemarie.dev" aria-label="Email">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full bg-amber/10 hover:bg-amber/20 text-cream"
+                >
+                  <Mail className="h-5 w-5" />
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </BlurFade>
+      </section>
+
+      {/* Skills Section */}
+      <section
+        id="expertise-combined"
+        className="relative w-full py-20 px-4 md:px-8 overflow-hidden bg-gradient-to-br from-slate-100 via-white to-slate-200 dark:from-zinc-900 dark:via-zinc-800 dark:to-zinc-900"
+      >
+        {/* Icon Cloud as Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              opacity: 20, // Increased from 0.10 to 0.25
+              filter: "brightness(1.1) contrast(1.1)", // Slight enhancement for visibility
+            }}
+          >
+            <IconCloudComponent />
+          </div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          {/* Section Header */}
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold text-center text-zinc-800 dark:text-white mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            My Expertise & Services
+          </motion.h2>
+
+          {/* Skills Circle Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-24">
+            {skills.map((skill, index) => (
+              <motion.div
+                key={`skill-${index}`}
+                className="relative bg-white/30 dark:bg-zinc-700/30 backdrop-blur-md p-6 rounded-2xl flex flex-col items-center shadow-xl border border-white/20 dark:border-zinc-600/20"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 50, scale: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <CircularProgress
+                  value={skill.progress}
+                  size={100}
+                  strokeWidth={6}
+                  label={skill.name}
+                  unit="%"
+                />
+                <span className="mt-4 text-lg font-semibold text-zinc-800 dark:text-white">
+                  {skill.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {MyServices.map((service, index) => (
+              <motion.div
+                key={`service-${index}`}
+                className="relative group bg-white/30 dark:bg-zinc-700/30 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20 dark:border-zinc-600/20 transition-transform hover:-translate-y-2"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                  0{index + 1}
+                </span>
+                <h4 className="text-2xl font-bold uppercase mt-2 text-zinc-800 dark:text-white">
+                  {service.name}
+                </h4>
+                <p className="my-4 text-sm text-zinc-600 dark:text-zinc-300">
+                  {service.description}
+                </p>
+
+                <ul className="flex flex-wrap gap-2 mt-2">
+                  {service.technologies.map((tech) => (
+                    <li
+                      key={tech}
+                      className="px-3 py-1 text-xs bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-100 rounded-full"
+                    >
+                      {tech}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href={`/services#${service.slug}`}
+                  className="flex items-center gap-2 mt-6 text-sm text-cream"
+                >
+                  <ArrowUpIcon className="rotate-45 w-4 h-4 transition-transform group-hover:rotate-90" />
+                  <span>ABOUT {service.name.toUpperCase()}</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GitHub Activity Section */}
+      <section className="py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-cream mb-6">
+              GitHub Activity
+            </h2>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <GitHubActivity data={gitHubData} />
+            )}
+
+            <div className="mt-8 text-center">
+              <Button
+                asChild
+                variant="outline"
+                className="text-cream border-cream hover:bg-white hover:text-black"
+              >
+                <a
+                  href="https://github.com/muhimpunduanne"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <Github className="mr-2 h-4 w-4" />
+                  View GitHub Profile
+                </a>
+              </Button>
             </div>
-          </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Custom Projects Section */}
+      <section
+        id="works"
+        className="max-w-screen-xl mx-auto w-full px-4 pt-32 pb-12 lg:pb-32"
+      >
+        <div className="flex justify-between items-center w-full">
+          <h3 className="text-3xl md:text-4xl text-zinc-800 dark:text-zinc-300">
+            Selected project
+          </h3>
+          <Link
+            href="/work"
+            className="flex items-center justify-center gap-4 group"
+          >
+            <span className="border border-zinc-800 dark:border-zinc-500 dark:hover:border-zinc-200 p-2 rounded-full bg-zinc-300 dark:bg-zinc-800">
+              <ArrowUpIcon className="rotate-45 group-hover:rotate-90 transition-transform duration-300" />
+            </span>
+            <span className="text-base md:text-xl text-cream">SEE ALL</span>
+          </Link>
+        </div>
+        <LTRVersion />
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="section-container py-12 md:py-24 w-full">
+        <div className="container max-w-5xl mx-auto px-4">
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center text-cream section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+          >
+            Testimonials
+          </motion.h2>
+          <div className="w-full">
+            <MarqueeDemo />
+          </div>
         </div>
       </section>
 
       {/* Floating Contact Buttons */}
       <FloatingContactButtons />
-    </>
+    </div>
   );
 }
