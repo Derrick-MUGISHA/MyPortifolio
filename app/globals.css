@@ -46,7 +46,7 @@
   --project-showcase-testimony-top: 1.24em;
   --project-showcase-testimony-bottom: 1em;
   --project-showcase-line-height: 1.56;
-  --project-showcase-button-gradient: linear-gradient(to right, #603dec, #a123f4);
+  --project-showcase-button-gradient: linear-gradient(to right, #eee, #aaa);
   --project-showcase-button-background: #eee;
   --project-showcase-button-text-color: #111;
   --project-showcase-button-outer-radius: 16.2px;
@@ -71,7 +71,7 @@
   --project-showcase-testimony-top: 1.24em;
   --project-showcase-testimony-bottom: 1em;
   --project-showcase-line-height: 1.56;
-  --project-showcase-button-gradient: linear-gradient(to right, #603dec, #a123f4);
+  --project-showcase-button-gradient: linear-gradient(to right, #eee, #aaa);
   --project-showcase-button-background: #161616;
   --project-showcase-button-text-color: #fff;
   --project-showcase-button-outer-radius: 6.34px;
