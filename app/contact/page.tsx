@@ -1,15 +1,101 @@
 "use client"
 
+import { useState } from "react"
 import { PageHeader } from "@/components/page-header"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, MapPin, Phone, Calendar } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
-import { ContactForm } from "@/components/contact-form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/components/ui/use-toast"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
+
+  const [loading, setLoading] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const { toast } = useToast()
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    setErrorMessage("") // Clear error on new input
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setErrorMessage("")
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          to: "derrickmugisha169@gmail.com"
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Success toast with custom styling
+        toast({
+          title: "✅ Message sent successfully!",
+          description: "Thank you! Your email has been sent to Derrick.",
+          variant: "default",
+          className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-950 dark:border-green-800 dark:text-green-200",
+        })
+
+        setShowSuccess(true)
+        setTimeout(() => setShowSuccess(false), 5000)
+
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        })
+      } else {
+        const errMsg = data.error || "Something went wrong. Please try again."
+        setErrorMessage(errMsg)
+        
+        // Error toast with custom styling
+        toast({
+          title: "❌ Error sending message",
+          description: errMsg,
+          variant: "destructive",
+          className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-950 dark:border-red-800 dark:text-red-200",
+        })
+      }
+    } catch (error) {
+      console.error("Error sending email:", error)
+      setErrorMessage("An unexpected error occurred. Please try again later.")
+      
+      // Error toast with custom styling
+      toast({
+        title: "❌ Error sending message",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+        className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-950 dark:border-red-800 dark:text-red-200",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="container py-12">
       <PageHeader title="Get in Touch" description="Have a question or want to work together? Reach out to me!" />
@@ -23,12 +109,58 @@ export default function ContactPage() {
         >
           <Card className="gradient-border overflow-hidden">
             <CardContent className="p-8">
-              <ContactForm />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Input
+                    name="name"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="Your Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <Input
+                  name="subject"
+                  placeholder="Subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                />
+                <Textarea
+                  name="message"
+                  placeholder="Your Message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={6}
+                  required
+                />
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? "Sending..." : "Send Message"}
+                </Button>
+
+                {showSuccess && (
+                  <p className="text-sm text-green-600">Your message has been sent!</p>
+                )}
+
+                {errorMessage && (
+                  <p className="text-sm text-red-600">{errorMessage}</p>
+                )}
+              </form>
             </CardContent>
           </Card>
         </motion.div>
 
+        {/* Right Column */}
         <div className="space-y-6">
+          {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -46,7 +178,7 @@ export default function ContactPage() {
                         href="mailto:contact@annemarie.dev"
                         className="text-muted-foreground hover:text-primary transition-colors"
                       >
-                         muhimpunduan@gmail.com
+                        muhimpunduan@gmail.com
                       </a>
                     </div>
                   </div>
@@ -74,6 +206,7 @@ export default function ContactPage() {
             </Card>
           </motion.div>
 
+          {/* Socials */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -121,7 +254,12 @@ export default function ContactPage() {
                       <span className="sr-only">LinkedIn</span>
                     </Link>
                   </Button>
-                  <WhatsAppButton phoneNumber="+250795306939" size="icon" variant="outline" className="items-center rounded-full">
+                  <WhatsAppButton 
+                    phoneNumber="+250795306939" 
+                    size="icon" 
+                    variant="outline" 
+                    className="rounded-full flex items-center justify-center"
+                  >
                     <span className="sr-only">WhatsApp</span>
                   </WhatsAppButton>
                   <Button asChild variant="outline" size="icon" className="rounded-full">
@@ -135,6 +273,7 @@ export default function ContactPage() {
             </Card>
           </motion.div>
 
+          {/* Meeting Link */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
